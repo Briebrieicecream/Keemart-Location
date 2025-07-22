@@ -1,9 +1,7 @@
-/* ============ 初始化两张表 ============ */
-
-// Location 表 —— 6 列固定标题，不限行数
-const locHot = new Handsontable(document.getElementById('locTable'),{
-  data: [Array(6).fill('')],                        // 起始 1 空行
-  colHeaders:[
+/* -------- Location 表 -------- */
+const locHot = new Handsontable(document.getElementById('locTable'), {
+  data: [Array(6).fill('')],
+  colHeaders: [
     'Station',
     'Location Code',
     'Sun-Wed BD',
@@ -11,67 +9,69 @@ const locHot = new Handsontable(document.getElementById('locTable'),{
     'Security Index',
     'Max BD'
   ],
-  rowHeaders:true,
-  minSpareRows:5,                                   // 始终保留 5 行空白，可无限扩行
-  stretchH:'all',
-  licenseKey:'non-commercial-and-evaluation'
+  rowHeaders: true,
+  minSpareRows: 5,
+  stretchH: 'all',
+  licenseKey: 'non-commercial-and-evaluation',
+
+  // 当且仅当在 Location 表里粘贴
+  afterPaste() {
+    // 让 Team 表保持干净（只留标题 & 空行）
+    teamHot.loadData([['', '']]);
+  }
 });
 
-// Team 表 —— 2 列标题
-const teamHot = new Handsontable(document.getElementById('teamTable'),{
-  data:[Array(2).fill('')],
-  colHeaders:['BDM','Team Size'],
-  rowHeaders:true,
-  minSpareRows:5,
-  stretchH:'all',
-  licenseKey:'non-commercial-and-evaluation'
+/* -------- Team 表 -------- */
+const teamHot = new Handsontable(document.getElementById('teamTable'), {
+  data: [['', '']],
+  colHeaders: ['BDM', 'Team Size'],
+  rowHeaders: true,
+  minSpareRows: 5,
+  stretchH: 'all',
+  copyPaste: false,        // 彻底禁止 Ctrl+V 落到 Team 表
+  licenseKey: 'non-commercial-and-evaluation'
 });
 
-/* ============ 生成排班示范逻辑 ============ */
+/* -------- 生成排班 -------- */
+document.getElementById('genBtn').addEventListener('click', () => {
 
-document.getElementById('genBtn').addEventListener('click',()=>{
-  // 1) 读取并过滤空行
-  const loc = locHot.getData()
-               .filter(r=>r.some(c=>c!==null && c!==''));
-  const team= teamHot.getData()
-               .filter(r=>r.some(c=>c!==null && c!==''));
+  const loc = locHot.getData().filter(r => r.some(c => c));
+  const team = teamHot.getData().filter(r => r.some(c => c));
 
-  if(!loc.length||!team.length){
-    alert('请先分别粘贴 Location 与 Team 数据！');
+  if (!loc.length || !team.length) {
+    alert('Location 表和 Team 表都要粘贴数据！');
     return;
   }
 
-  // 2) 组装团队对象
-  const teams = team.map(r=>({
+  const teams = team.map(r => ({
     bdm:  r[0],
-    size: Number(r[1])||0,
-    assigned:[],
-    cap:0
+    size: Number(r[1]) || 0,
+    assign: [],
+    cap: 0
   }));
 
-  // 3) 简单轮流分配点位到 BDM
-  const weeks=['Week1','Week2','Week3','Week4'];
-  loc.forEach((row,i)=>{
-    const tgt=teams[i%teams.length];
-    tgt.assigned.push({week:weeks[i%weeks.length],loc:row[1]});
-    tgt.cap += Number(row[5])||0;
+  const weeks = ['Week1','Week2','Week3','Week4'];
+  loc.forEach((row, i) => {
+    const tgt = teams[i % teams.length];
+    tgt.assign.push({ week: weeks[i % weeks.length], loc: row[1] });
+    tgt.cap += Number(row[5]) || 0;
   });
 
-  // 4) 输出结果表
-  let html='<h2>Schedule Result</h2><table class=\"result\"><tr><th>BDM</th>';
-  weeks.forEach(w=>html+=`<th>${w}</th>`);
-  html+='<th>Team Size</th><th>Total Max BD</th><th>Crowd%</th></tr>';
+  /* 输出表格 */
+  let html = '<h2>Schedule Result</h2><table class="result"><tr><th>BDM</th>';
+  weeks.forEach(w => html += `<th>${w}</th>`);
+  html += '<th>Team Size</th><th>Total Max BD</th><th>Crowd%</th></tr>';
 
-  teams.forEach(t=>{
-    html+=`<tr><td>${t.bdm}</td>`;
-    weeks.forEach(w=>{
-      const found=t.assigned.find(a=>a.week===w);
-      html+=`<td>${found?found.loc:''}</td>`;
+  teams.forEach(t => {
+    html += `<tr><td>${t.bdm}</td>`;
+    weeks.forEach(w => {
+      const f = t.assign.find(a => a.week === w);
+      html += `<td>${f ? f.loc : ''}</td>`;
     });
-    const crowd=t.size?Math.round(t.cap/t.size*100):0;
-    html+=`<td>${t.size}</td><td>${t.cap}</td><td>${crowd}%</td></tr>`;
+    const crowd = t.size ? Math.round(t.cap / t.size * 100) : 0;
+    html += `<td>${t.size}</td><td>${t.cap}</td><td>${crowd}%</td></tr>`;
   });
+  html += '</table>';
 
-  html+='</table>';
-  document.getElementById('output').innerHTML=html;
+  document.getElementById('output').innerHTML = html;
 });
