@@ -1,29 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Keemart Auto Scheduler</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Keemart Auto Scheduler</title>
 
-  <!-- Handsontable 样式 -->
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/handsontable@13.0.0/dist/handsontable.full.min.css"/>
+<!-- Handsontable 样式 -->
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/handsontable@13/dist/handsontable.full.min.css"/>
 
-  <style>
-    body{font-family:sans-serif;padding:20px;background:#f6f6f6}
-    h1{color:#2c3e50}
-    #tables{display:flex;gap:20px;flex-wrap:wrap}
-    .hot-box{width:520px;height:320px;background:#fff;border:1px solid #ccc}
-    button{padding:10px 24px;margin-top:20px;font-size:16px;background:#27ae60;color:#fff;border:none;cursor:pointer}
-    table.result{width:100%;border-collapse:collapse;margin-top:20px;background:#fff}
-    table.result th,table.result td{border:1px solid #ccc;padding:6px;text-align:center}
-    table.result th{background:#2c3e50;color:#fff}
-  </style>
+<style>
+  body{font-family:sans-serif;padding:20px;background:#f6f6f6}
+  h1{color:#2c3e50}
+  #tables{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
+  .hot-box{width:520px;height:360px;background:#fff;border:1px solid #ccc}
+  #genBtn{
+    display:block;                 /* 独占一行 */
+    margin-top:30px;
+    padding:12px 28px;
+    font-size:16px;
+    background:#27ae60;
+    color:#fff;border:none;cursor:pointer
+  }
+  table.result{width:100%;border-collapse:collapse;margin-top:24px;background:#fff}
+  table.result th,table.result td{border:1px solid #ccc;padding:6px;text-align:center}
+  table.result th{background:#2c3e50;color:#fff}
+</style>
 </head>
 
 <body>
 <h1>Keemart Auto Scheduler</h1>
-<p>步骤：① 双击下面空表格任意单元格后 <b>Ctrl + V</b> 粘贴 Excel 数据；② 点击 <b>Generate Schedule</b>。</p>
+<p>① 单击目标表格空行后 <b>Ctrl + V</b> 粘贴 Excel；② 点 <b>Generate Schedule</b>。</p>
 
 <div id="tables">
   <div>
@@ -40,7 +47,7 @@
 <div id="output"></div>
 
 <!-- Handsontable 脚本 -->
-<script src="https://cdn.jsdelivr.net/npm/handsontable@13.0.0/dist/handsontable.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/handsontable@13/dist/handsontable.full.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
