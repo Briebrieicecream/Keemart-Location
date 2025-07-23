@@ -4,10 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Keemart Auto Scheduler</title>
-
 <link rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/handsontable@13/dist/handsontable.full.min.css"/>
-
 <style>
   html,body{height:100%;margin:0}
   body{font-family:sans-serif;background:#f6f6f6;padding:24px;box-sizing:border-box;overflow-y:auto}
@@ -20,25 +18,24 @@
   table.result{width:100%;max-width:940px;margin-bottom:40px;border-collapse:collapse;background:#fff}
   table.result th,table.result td{border:1px solid #ccc;padding:6px;text-align:center}
   table.result th{background:#263444;color:#fff}
+  .filterBox{margin:24px 0}
 </style>
 </head>
-
 <body>
 <h1>Keemart Auto Scheduler</h1>
 
 <section>
   <h2>① 粘贴 Location Table</h2>
-  <p>选中空行后 <b>Ctrl + V</b> 把点位表贴进来</p>
   <div id="locTable" class="hot-box"></div>
 </section>
 
 <section>
   <h2>② 粘贴 Team Table</h2>
-  <p>同样方法，把 BDM &amp; Team Size 贴进来</p>
   <div id="teamTable" class="hot-box"></div>
 </section>
 
 <button id="genBtn">Generate Schedule</button>
+
 <div id="output"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/handsontable@13/dist/handsontable.full.min.js"></script>
